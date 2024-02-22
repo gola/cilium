@@ -13,8 +13,6 @@
     ".github/actions/lvh-kind/**",
     ".github/actions/set-env-variables/action.yml",
     ".github/workflows/**",
-    ".github/kind-config.yaml",
-    ".github/kind-config-ipv6.yaml",
     "images/**",
     "examples/hubble/*",
     "go.mod",
