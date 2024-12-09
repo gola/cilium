@@ -64,8 +64,8 @@ func NoErrorsInLogs(ciliumVersion semver.Version, checkLevels []string, external
 		hubbleQueueFull, reflectPanic, svcNotFound, unableTranslateCIDRgroups, gobgpWarnings,
 		endpointMapDeleteFailed, etcdReconnection, epRestoreMissingState, mutationDetectorKlog,
 		hubbleFailedCreatePeer, fqdnDpUpdatesTimeout, longNetpolUpdate, failedToGetEpLabels,
-		failedCreategRPCClient, unableReallocateIngressIP, fqdnMaxIPPerHostname, failedGetMetricsAPI, envoyTLSWarning,
-		ciliumNodeConfigDeprecation}
+		failedCreategRPCClient, unableReallocateIngressIP, fqdnMaxIPPerHostname, failedGetMetricsAPI,
+		envoyTLSWarning, ciliumNodeConfigDeprecation, ipcacheValueSizeMismatch}
 	// The list is adopted from cilium/cilium/test/helper/utils.go
 	var errorMsgsWithExceptions = map[string][]logMatcher{
 		panicMessage:         nil,
@@ -318,6 +318,8 @@ const (
 	fqdnMaxIPPerHostname        stringMatcher = "Raise tofqdns-endpoint-max-ip-per-hostname to mitigate this"            // cf. https://github.com/cilium/cilium/issues/36073
 	failedGetMetricsAPI         stringMatcher = "retrieve the complete list of server APIs: metrics.k8s.io/v1beta1"      // cf. https://github.com/cilium/cilium/issues/36085
 	ciliumNodeConfigDeprecation stringMatcher = "cilium.io/v2alpha1 CiliumNodeConfig will be deprecated in cilium v1.16" // cf. https://github.com/cilium/cilium/issues/37249
+	// Can be removed in v1.19.
+	ipcacheValueSizeMismatch stringMatcher = "cilium_ipcache: got 24, wanted 12" // cf. https://github.com/cilium/cilium/pull/36359
 
 	// Logs messages that should not be in the cilium-envoy DS logs
 	envoyErrorMessage    = "[error]"
