@@ -1139,25 +1139,25 @@ func BatchUpdate[K any, V any](m *Map, keys []MapKey, values []MapValue) (int, e
 	if keyLen == 0 {
 		return 0, nil
 	}
-	if keyLen > option.Config.BPFBatchUpdateChunkSize {
-		var count int
-		chunkLen := keyLen / option.Config.BPFBatchUpdateChunkSize
-		for i := range chunkLen {
-			idx := i * option.Config.BPFBatchUpdateChunkSize
-			endLen := (i + 1) * option.Config.BPFBatchUpdateChunkSize
-			cnt, err := batchUpdate[K, V](m, keys[idx:endLen], values[idx:endLen])
-			if err != nil {
-				return count + cnt, err
-			}
-			count += cnt
-		}
-		if keyLen%option.Config.BPFBatchUpdateChunkSize != 0 {
-			idx := chunkLen * option.Config.BPFBatchUpdateChunkSize
-			cnt, err := batchUpdate[K, V](m, keys[idx:], values[idx:])
-			return cnt + count, err
-		}
-		return count, nil
-	}
+	// if keyLen > option.Config.BPFBatchUpdateChunkSize {
+	// 	var count int
+	// 	chunkLen := keyLen / option.Config.BPFBatchUpdateChunkSize
+	// 	for i := range chunkLen {
+	// 		idx := i * option.Config.BPFBatchUpdateChunkSize
+	// 		endLen := (i + 1) * option.Config.BPFBatchUpdateChunkSize
+	// 		cnt, err := batchUpdate[K, V](m, keys[idx:endLen], values[idx:endLen])
+	// 		if err != nil {
+	// 			return count + cnt, err
+	// 		}
+	// 		count += cnt
+	// 	}
+	// 	if keyLen%option.Config.BPFBatchUpdateChunkSize != 0 {
+	// 		idx := chunkLen * option.Config.BPFBatchUpdateChunkSize
+	// 		cnt, err := batchUpdate[K, V](m, keys[idx:], values[idx:])
+	// 		return cnt + count, err
+	// 	}
+	// 	return count, nil
+	// }
 	return batchUpdate[K, V](m, keys, values)
 }
 
@@ -1229,8 +1229,8 @@ func batchUpdate[K any, V any](m *Map, keys []MapKey, values []MapValue) (int, e
 		return 0, err
 	}
 
-	bpfKeys := unsafe.Slice((*K)(unsafe.Pointer(&keys[0])), keyLen)
-	bpfValues := unsafe.Slice((*V)(unsafe.Pointer(&values[0])), valueLen)
+	bpfKeys := unsafe.Slice((*K)(unsafe.Pointer(&keys)), keyLen)
+	bpfValues := unsafe.Slice((*V)(unsafe.Pointer(&values)), valueLen)
 	count, err = m.m.BatchUpdate(bpfKeys, bpfValues, &ebpf.BatchOptions{})
 
 	if metrics.BPFMapOps.IsEnabled() {
